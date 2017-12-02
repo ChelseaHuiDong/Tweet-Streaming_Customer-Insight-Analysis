@@ -14,14 +14,14 @@ from urllib3.exceptions import ProtocolError
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-consumer_key = 'BKIapAApXPHwjsjCxHmq3pCaU'
-consumer_secret = 'jumbe5TGmE9VsMcehnCBEbOSQ9Pa9Rpa7cTMLh13MF8ZlLIp0M'
+consumer_key = '***'
+consumer_secret = '***'
 
-access_token = '75645034-Wsw5wUQjXe3bQbsz215lkDWCpOtOHFRTQdwDppw74'
-access_token_secret = 'Mt0lMClHF4IvpwDd0PuHGHG1h4wglEiUWMWpWYQqBELbB'
+access_token = '***'
+access_token_secret = '***'
 
-AWS_ACCESS_KEY = 'AKIAJEEMSKTBQCNWHX7Q'
-AWS_SECRET_KEY = 'Pg1gRXI338d2go5oIzH72lUW2NttpGQR2ZnN/JS+'
+AWS_ACCESS_KEY = '***'
+AWS_SECRET_KEY = '***'
 region = 'us-west-2' # For example, us-east-1
 service = 'es'
 
@@ -30,7 +30,7 @@ auth.set_access_token(access_token, access_token_secret)
 
 awsauth = AWS4Auth(AWS_ACCESS_KEY, AWS_SECRET_KEY, region, service)
 
-host = 'search-big-data-twitter-lgcnp6ssh6pghe3ul4zanmpziu.us-west-2.es.amazonaws.com'
+host = '***'
 
 es = Elasticsearch(
     hosts = [{'host': host, 'port': 443}],
