@@ -1,1 +1,1 @@
-# tweets-streaming-sentimental-analysis-using-Kinesis-DynamoDB-Elasticsearch
+# twitter-streaming-analytics_customer-insight-analysis
