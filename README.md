@@ -1,4 +1,4 @@
-### Deep Dive into Customer Insight with Twitter Streaming Analysis Using AWS
+# Deep Dive into Customer Insight with Twitter Streaming Analysis Using AWS
 
 AWS can be used to build a highly scalable architecture to perform near real-time analytics on streaming data.
 
@@ -6,7 +6,7 @@ Our project provides companies and businesses the ability to track what consumer
 
 These instructions help setup the architecture.
 
-#### Pre-requisites
+## Pre-requisites
 
 We will be using twitter streaming data obtained using twitter's streaming API. Ensure that you have the following setup, before you proceed:
 
@@ -18,7 +18,7 @@ We will be using twitter streaming data obtained using twitter's streaming API. 
 - Google Chrome browser
 - [ElasticSearch Head](https://chrome.google.com/webstore/detail/elasticsearch-head/ffmkiejjmecolpfloofpjologoblkegm?hl=en-US) chrome extension
 
-#### Setting up EC2 Instance
+## Setting up EC2 Instance
 
 Follow the instructions provided in the `ec2_machine_setup.bash` file. The instructions help you:
 
@@ -33,7 +33,7 @@ Follow the instructions provided in the `ec2_machine_setup.bash` file. The instr
 - Create file with your Twitter App credentials
 - Create keywords file with variables that store keywords for various analyses (refer to sample file `keywords.py`)
 
-#### Creating AWS Kinesis Data Stream
+## Creating AWS Kinesis Data Stream
 
 The file `create_kinesis_stream.py` creates a kinesis stream with 1 shard. Read more about AWS Kinesis Data Streams [here](https://aws.amazon.com/kinesis/data-streams/).
 
@@ -50,7 +50,7 @@ response = client.create_stream(
 )
 ```
 
-#### Feeding Twitter Stream to Kinesis
+## Feeding Twitter Stream to Kinesis
 
 The file `twitter_to_kinesis.py` creates a producer which ingests the Twitter stream into the Kinesis stream that we created above.
 
@@ -85,7 +85,7 @@ while True:
     pass
 ```
 
-#### Creating a Customer to Test the Kinesis Stream
+## Creating a Customer to Test the Kinesis Stream
 
 ```
 # Consume the data
@@ -122,7 +122,7 @@ python ~/big_data_project/testing/simple_consumer.py
 
 If everything works well, executing the above commands should start printing the output to your BASH window which has the consumer running. Your output should look similar to the sample output given in `kinesis_tweets.txt`.
 
-#### Creating DynamoDB Table
+## Creating DynamoDB Table
 
 We now create a DynamoDB table which stores data from our stream (`create_dynamodb_table.py`).
 
@@ -149,7 +149,7 @@ table = dynamodb.create_table(
 table.meta.client.get_waiter('table_exists').wait(TableName='big_data_tweets')
 ```
 
-#### Processing and Storing Stream in DynamoDB
+## Processing and Storing Stream in DynamoDB
 
 Before we store our stream in the DynamoDB table, we process it to extract the fields from the raw tweet, which are useful to us. We also add additional features to our processed tweet. Refer to `kinesis_to_dynamodb.py` for the code.
 
@@ -161,7 +161,7 @@ python ~/big_data_project/final_pipeline/kinesis_to_dynamodb.py
 
 To check if data is being processed and stored in your DynamoDB table, go to your DynamoDB dashboard in AWS, click on `Tables`, then on `big_data_tweets`. Go to `Items` tab and you should see your data being indexed here.
 
-#### Setting Up DynamoDB Stream
+## Setting Up DynamoDB Stream
 
 Go back to the `Overview` tab on the DynamoDB dashboard and click on `Manage Stream`. Select `New Image` and click on `Enable` to enable the DynamoDB stream.
 
@@ -169,7 +169,7 @@ Note down your DynamoDB table ARN and the DynamoDB stream ARN.
 
 Similarly, go to Elasticsearch Service and note down the ARN and Endpoint and Kibana URLs.
 
-#### Creating IAM Roles for Lambda
+## Creating IAM Roles for Lambda
 
 Go to `IAM` under `Services` and click on `Roles` and then `Create role`. Select `AWS service` role and `Lambda`, as service. Select `AWSLambdaBasicExecutionRole` as permission policy and click `Next`. Name your role, *dynamodb-to-es*.
 
@@ -242,7 +242,7 @@ Click `Add inline policy` and select `Custom Policy`. Create the following inlin
 
   Note the `/*` after the ARN.
 
-#### Creating Lambda Function
+## Creating Lambda Function
 
 - Go to `Lambda` under `Services` and click on `Create function` then `Author from scratch`. Name the function *dynamodb_to_es*, select runtime as `Python 2.7`, `Choose an existing role` as role, select the `dynamodb_to_es` IAM role that you created above, as the existing role and create the function.
 - Scroll down and paste the code from the `lambda.py` file in the function code window labeled `lambda_function`. Ensure to change the ES_ENDPOINT in the code to your Elasticsearch Endpoint. It should be of the form `search-your-es-endpoint-xxxxxxxxxxxxxxxxxxxxxxxxxx.us-east-1.es.amazonaws.com/` without the `https://`.
@@ -250,7 +250,7 @@ Click `Add inline policy` and select `Custom Policy`. Create the following inlin
 - Scroll back up and add DynamoDB as a trigger from the list of triggers given in the left panel. Scroll down and select `big_data_tweets` as the DynamoDB table, check `Enable trigger` and click on `Add`.
 - Scroll back up and DynamoDB should be added on the left. The right panel lists the resources the function's role has access to. There should be three resources listed here, CloudWatch Logs, DynamoDB and Elasticsearch Service. Click on `Save` to deploy the Lambda function.
 
-#### Creating Elasticsearch Mapping
+## Creating Elasticsearch Mapping
 
 - A mapping in Elasticsearch is a schema that defines how the data is indexed for search and aggregation. Here we create custom analyzers which enable various text fields to be analyzed in multiple ways. Phone features and Hashtags have multi-fields, one each for aggregation and search. They support partial search and are not case sensitive. The tweet text also uses multi-fields, with aggregation supported for the complete tweet and a search which supports searching for words with the same root. It is not case sensitive.
 
@@ -270,7 +270,7 @@ Click `Add inline policy` and select `Custom Policy`. Create the following inlin
 
 - You can go back to `Overview` tab, click on `Refresh` on the upper right corner and you should see the index created.
 
-#### Deploying Codes
+## Deploying Codes
 
 - Go back to your EC2 and finally deploy your codes to complete the setup using the following commands
 
@@ -283,11 +283,11 @@ Click `Add inline policy` and select `Custom Policy`. Create the following inlin
 
 - Then go to the ElasticSearch Head extension window and refresh the overview tab. You should see the data getting indexed in your Elasticsearch index.
 
-#### Creating Kibana Dashboard
+## Creating Kibana Dashboard
 
 Use your Kibana link to open the Kibana dashboard. You are all set to visualize your live analyzed twitter stream according to your need! Learn more about creating Kibana dashboards [here](https://www.elastic.co/guide/en/kibana/5.5/dashboard-getting-started.html).
 
-#### Scope and Applications of the Project
+## Scope and Applications of the Project
 
 - **360 product overview**
   Build a holistic understanding of your products, by integrating social media with internal data.
@@ -298,7 +298,7 @@ Use your Kibana link to open the Kibana dashboard. You are all set to visualize 
 - **Policy making**
   Gauge how the public reacts to important policy decisions.
 
-#### References:
+## References:
 
 - **AWS**
   <http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html>
